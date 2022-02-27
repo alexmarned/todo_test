@@ -1,63 +1,57 @@
 <?php
 
+class News {
 
-class News
-{
+    /** Returns single news items with specified id
+     * @rapam integer &id
+     */
+    public static function getNewsItemByID($id) {
+        $id = intval($id);
 
-	/** Returns single news items with specified id
-	* @rapam integer &id
-	*/
+        if ($id) {
+            /* 			$host = 'localhost';
+              $dbname = 'php_base';
+              $user = 'root';
+              $password = '';
+              $db = new PDO("mysql:host=$host;dbname=$dbname", $user, $password); */
+            $db = Db::getConnection();
+            $result = $db->query('SELECT * FROM news WHERE id=' . $id);
 
-	public static function getNewsItemByID($id)
-	{
-		$id = intval($id);
+            /* $result->setFetchMode(PDO::FETCH_NUM); */
+            $result->setFetchMode(PDO::FETCH_ASSOC);
 
-		if ($id) {
-/*			$host = 'localhost';
-			$dbname = 'php_base';
-			$user = 'root';
-			$password = '';
-			$db = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);*/
-			$db = Db::getConnection();
-			$result = $db->query('SELECT * FROM news WHERE id=' . $id);
+            $newsItem = $result->fetch();
 
-			/*$result->setFetchMode(PDO::FETCH_NUM);*/
-			$result->setFetchMode(PDO::FETCH_ASSOC);
+            return $newsItem;
+        }
+    }
 
-			$newsItem = $result->fetch();
+    /**
+     * Returns an array of news items
+     */
+    public static function getNewsList() {
+        /* 		$host = 'localhost';
+          $dbname = 'php_base';
+          $user = 'root';
+          $password = '';
+          $db = new PDO("mysql:host=$host;dbname=$dbname", $user, $password); */
 
-			return $newsItem;
-		}
+        $db = Db::getConnection();
+        $newsList = array();
 
-	}
+        $result = $db->query('SELECT id, title, date, author_name, short_content FROM news ORDER BY id ASC LIMIT 10');
 
-	/**
-	* Returns an array of news items
-	*/
-	public static function getNewsList() {
-/*		$host = 'localhost';
-		$dbname = 'php_base';
-		$user = 'root';
-		$password = '';
-		$db = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);*/
+        $i = 0;
+        while ($row = $result->fetch()) {
+            $newsList[$i]['id'] = $row['id'];
+            $newsList[$i]['title'] = $row['title'];
+            $newsList[$i]['date'] = $row['date'];
+            $newsList[$i]['author_name'] = $row['author_name'];
+            $newsList[$i]['short_content'] = $row['short_content'];
+            $i++;
+        }
 
-		$db = Db::getConnection();
-		$newsList = array();
-
-		$result = $db->query('SELECT id, title, date, author_name, short_content FROM news ORDER BY id ASC LIMIT 10');
-
-		$i = 0;
-		while($row = $result->fetch()) {
-			$newsList[$i]['id'] = $row['id'];
-			$newsList[$i]['title'] = $row['title'];
-			$newsList[$i]['date'] = $row['date'];
-			$newsList[$i]['author_name'] = $row['author_name'];
-			$newsList[$i]['short_content'] = $row['short_content'];
-			$i++;
-		}
-
-		return $newsList;
-	
-}
+        return $newsList;
+    }
 
 }

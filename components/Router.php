@@ -1,116 +1,106 @@
 <?php
-//  echo 'Router.php';
 
+//  echo 'Router.php';
 //include "config/routes.php"; 
 
-class Router
-{
+class Router {
 
-	private $routes;
+    private $routes;
 
-	public function __construct()
-	{
-	    session_start();
-		//$routesPath = ROOT.'/config/routes.php';
-        	$routesPath =  'config/routes.php';
+    public function __construct() {
+        session_start();
+        //$routesPath = ROOT.'/config/routes.php';
+        $routesPath = 'config/routes.php';
 
-    //    include_once 'config/config.php';
+        //    include_once 'config/config.php';
+        //  require_once 'config/routes.php'; 
 
- 
-        
-     //  require_once 'config/routes.php'; 
-	
         $this->routes = include($routesPath);
-     //   var_dump( $this->routes);
-     //   exit();
-	}
+        //   var_dump( $this->routes);
+        //   exit();
+    }
 
 // Return type
 
-	private function getURI()
-	{
-		if (!empty($_SERVER['REQUEST_URI'])) {
-		return trim($_SERVER['REQUEST_URI'], '/');
-		}
-	}
+    private function getURI() {
+        if (!empty($_SERVER['REQUEST_URI'])) {
+            return trim($_SERVER['REQUEST_URI'], '/');
+        }
+    }
 
-	public function run()
-	{
-		$uri = $this->getURI();
+    public function run() {
+        $uri = $this->getURI();
 
+        foreach ($this->routes as $uriPattern => $path) {
 
+            if (preg_match("~$uriPattern~", $uri)) {
+                //      var_dump($uriPattern , $uri);
+                //    exit();
 
-		foreach ($this->routes as $uriPattern => $path) {
+                /* 				echo "<br>Где ищем (запрос, который набрал пользователь): ".$uri;
+                  echo "<br>Что ищем (совпадение из правила): ".$uriPattern;
+                  echo "<br>Кто обрабатывает: ".$path; */
 
-			if(preg_match("~$uriPattern~", $uri)) {
-          //      var_dump($uriPattern , $uri);
-            //    exit();
+                // Получаем внутренний путь из внешнего согласно правилу.
 
-/*				echo "<br>Где ищем (запрос, который набрал пользователь): ".$uri;
-				echo "<br>Что ищем (совпадение из правила): ".$uriPattern;
-				echo "<br>Кто обрабатывает: ".$path; */
+                $internalRoute = preg_replace("~$uriPattern~", $path, $uri);
 
-				// Получаем внутренний путь из внешнего согласно правилу.
+                /* 				echo '<br>Нужно сформулировать: '.$internalRoute.'<br>'; */
 
-				$internalRoute = preg_replace("~$uriPattern~", $path, $uri);
-
-/*				echo '<br>Нужно сформулировать: '.$internalRoute.'<br>'; */
-
-				$segments = explode('/', $internalRoute);
-                 unset($segments[0]);
-            //    print_r($segments);
-               
-
-				$controllerName = array_shift($segments).'Controller';
-				$controllerName = ucfirst($controllerName);
+                $segments = explode('/', $internalRoute);
+                unset($segments[0]);
+                //    print_r($segments);
 
 
-				$actionName = 'action'.ucfirst(array_shift($segments));
+                $controllerName = array_shift($segments) . 'Controller';
+                $controllerName = ucfirst($controllerName);
 
-				$parameters = $segments;
+                $actionName = 'action' . ucfirst(array_shift($segments));
 
-/*
-				var_dump($parameters);
-				exit();
-*/
+                $parameters = $segments;
 
-				//$controllerFile = ROOT . '/controllers/' .$controllerName. '.php';
-                $controllerFile =  'controllers/' .$controllerName. '.php';
-				if (file_exists($controllerFile)) {
-					include_once($controllerFile);
-				}
+                /*
+                  var_dump($parameters);
+                  exit();
+                 */
 
-
-
-
-
-				$controllerObject = new $controllerName;
-				/*$result = $controllerObject->$actionName($parameters); - OLD VERSION */
-				/*$result = call_user_func(array($controllerObject, $actionName), $parameters);*/
-				$result = call_user_func_array(array($controllerObject, $actionName), $parameters);
-/*
-var_dump($result);
-die();
-exit();
-*/
-
-				/*
-                if ($result == 'false'){
-echo 'страница не найдена';
-// header('Lacation:' . '../views/main/index.php');
-include_once('../views/main/index.php');
-exit();
+                //$controllerFile = ROOT . '/controllers/' .$controllerName. '.php';
+                $controllerFile = 'controllers/' . $controllerName . '.php';
+                if (file_exists($controllerFile)) {
+                    include_once($controllerFile);
                 }
-*/
 
 
 
 
-				if ($result != null) {
-					break;
-				}
-			}
 
-		}
-	}
+                $controllerObject = new $controllerName;
+                /* $result = $controllerObject->$actionName($parameters); - OLD VERSION */
+                /* $result = call_user_func(array($controllerObject, $actionName), $parameters); */
+                $result = call_user_func_array(array($controllerObject, $actionName), $parameters);
+                /*
+                  var_dump($result);
+                  die();
+                  exit();
+                 */
+
+                /*
+                  if ($result == 'false'){
+                  echo 'страница не найдена';
+                  // header('Lacation:' . '../views/main/index.php');
+                  include_once('../views/main/index.php');
+                  exit();
+                  }
+                 */
+
+
+
+
+                if ($result != null) {
+                    break;
+                }
+            }
+        }
+    }
+
 }

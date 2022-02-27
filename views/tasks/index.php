@@ -57,15 +57,16 @@ include_once 'config/config.php';
 
         <?php
         /*
-        echo $_SESSION['NowLang'];
-        echo '<pre>';
-        var_dump($_SESSION);
-        var_dump($_COOKIE['message']);
-        echo '</pre>';
+          echo $_SESSION['NowLang'];
+          echo '<pre>';
+          var_dump($_SESSION);
+          var_dump($_COOKIE['message']);
+          echo '</pre>';
 
-        */
+         */
 
-        if (isset($_SESSION['message'])): ?>
+        if (isset($_SESSION['message'])):
+            ?>
             <div class="msg">
                 <?php
                 echo $_SESSION['message'];
@@ -75,7 +76,13 @@ include_once 'config/config.php';
         <?php endif ?>
 
 
+        <style type="text/css">
+            table {
+                max-width: 90%;
+                text-align: center;
+            }
 
+        </style>
 
     <center>      <h1>List of tasks</h1> </center>
     <table>
@@ -91,10 +98,10 @@ include_once 'config/config.php';
             </tr>
 
         </thead>
-        <?php $id = 0;?>
+        <?php $id = 0; ?>
         <?php foreach ($tasksList as $tasksItem): ?>
             <tr>
-                <td><?php echo $tasksItem['id']; ?></td>  <?php $id =  $tasksItem['id'] ; ?>
+                <td><?php echo $tasksItem['id']; ?></td>  <?php $id = $tasksItem['id']; ?>
                 <td><?php echo $tasksItem['task']; ?></td>           
                 <td> <?php echo $tasksItem['manager']; ?> </td>
                 <td><?php echo $tasksItem['data']; ?></td>

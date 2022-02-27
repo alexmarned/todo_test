@@ -17,8 +17,8 @@
             table {
                 margin: auto;
             }
-            
-               ul {
+
+            ul {
                 list-style: none; /*убираем маркеры списка*/
                 margin: 0; /*убираем верхнее и нижнее поле, равное 1em*/
                 padding-left: 0; /*убираем левый отступ, равный 40px*/
@@ -26,9 +26,9 @@
             a {
                 text-decoration: none; /*убираем подчеркивание текста ссылок*/
             }
-         div#menu   ul li {
-               float: left;
-               // display: inline !important;
+            div#menu   ul li {
+                float: left;
+                // display: inline !important;
             }
 
         </style>
@@ -42,7 +42,7 @@
     </head>
     <body>
         <style type="text/css">
-         
+
         </style>
         <div id="menu-wrapper">
             <div id="menu">

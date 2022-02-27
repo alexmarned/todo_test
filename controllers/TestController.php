@@ -1,32 +1,28 @@
 <?php
-include_once  'models/Users.php';
 
-class TestController
-{
+include_once 'models/Users.php';
 
-/*
-		public function actionIndex()
-		{
-            echo 'index contreoller';
-			return true;
-		}
-                
-                */
-                
-                
-                public function actionIndex()
-	{
-		
-		$newsList = array();
-		$newsList = Users::getUsersList();
+class TestController {
+    /*
+      public function actionIndex()
+      {
+      echo 'index contreoller';
+      return true;
+      }
 
-	//	require_once(ROOT . '/views/news/index.php');
-                
-                exit();
+     */
+
+    public function actionIndex() {
+
+        $newsList = array();
+        $newsList = Users::getUsersList();
+
+        //	require_once(ROOT . '/views/news/index.php');
+
+        exit();
         require_once( 'views/news/index.php');
 
-		return true;
-	}
-
+        return true;
+    }
 
 }
